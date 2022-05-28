@@ -1,0 +1,47 @@
+.equ SCREEN_WIDTH, 		640
+.equ SCREEN_HEIGH, 		480
+.equ BITS_PER_PIXEL,  	32
+
+
+.globl main
+main:
+	// X0 contiene la direccion base del framebuffer
+ 	mov x20, x0	// Save framebuffer base address to x20	
+	//---------------- CODE HERE ------------------------------------
+	
+	mov x3, 0
+	
+	b setcolor
+	
+newline:
+	mov x1, 19200      //  cant pixeles de cada linea ( (640*480)/16 )
+	
+loop0:
+	stur w10,[x0]	   // Set color of pixel N
+	add x0,x0,4	   // Next pixel
+	sub x1,x1,1  	   // decrement X counter
+	cbnz x1,loop0	   // If not end of line go to loop0
+	b.eq setcolor		// else setcolor
+				
+	// el loop 0 hace 1 linea
+
+setcolor:
+	add x3,x3,1
+	tst x3,1
+		b.ne ODD
+		b EVEN  
+		ODD:
+			movz x10, 0x67, lsl 16
+			movk x10, 0x0EA2, lsl 00
+			b backloop0;
+		EVEN:
+			movz x10, 0xFF, lsl 16
+			movk x10, 0xD837, lsl 00
+backloop0:
+	cmp x3,17 // si x3 es 17 significa que ya dibuje las 16 lineas y debo parar
+	b.ne newline
+
+//---------------------------------------------------------------
+	// Infinite Loop 
+InfLoop: 
+	b InfLoop
