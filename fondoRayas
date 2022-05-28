@@ -21,7 +21,7 @@ loop0:
 	add x0,x0,4	   // Next pixel
 	sub x1,x1,1  	   // decrement X counter
 	cbnz x1,loop0	   // If not end of line go to loop0
-	b.eq setcolor		// else setcolor
+	b.eq setcolor	   // else setcolor
 				
 	// el loop 0 hace 1 linea
 
