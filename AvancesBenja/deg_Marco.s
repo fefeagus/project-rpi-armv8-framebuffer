@@ -31,7 +31,6 @@ movk x10, 0x0000, lsl 00
 		add x10,x10,0x1000 // voy sumando bits del color q quiero al anterior color y me voy acercando
 		cmp x3,16 // si x3 es 16 significa que ya dibuje las 16 lineas y debo parar( la primera la dibujo cuando x3 es 0) 
 		b.ne newline
-	//fondo degradado negro a azul
 	
 	//------- dibujo del marco
 	mov x0, 0
