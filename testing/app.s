@@ -8,7 +8,11 @@
 main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
- 	mov x21, 1	// Save current pseudorandom
+ 	mov x21, 12345	// Save current pseudorandom
+ 	movz x21,0x3D43,lsl 0
+ 	movk x21,0xF92B,lsl 16
+ 
+
 	
 	//Como convencion, X0 será la direccion de retorno de las funciones
 	
@@ -16,16 +20,19 @@ main:
 	movk x10, 0x1585, lsl 00
 
 	
-//	mov x2, SCREEN_HEIGH         // Y Size 
-//loop1:
-//	mov x1, SCREEN_WIDTH         // X Size
-//loop0:
-//	stur w10,[x0]	   // Set color of pixel N
-//	add x0,x0,4	   // Next pixel
-//	sub x1,x1,1	   // decrement X counter
-//	cbnz x1,loop0	   // If not end row jump
-//	sub x2,x2,1	   // Decrement Y counter
-//	cbnz x2,loop1	   // if not last row, jump
+	//	mov x2, SCREEN_HEIGH         // Y Size 
+	//loop1:
+	//	mov x1, SCREEN_WIDTH         // X Size
+	//loop0:
+	//	stur w10,[x0]	   // Set color of pixel N
+	//	add x0,x0,4	   // Next pixel
+	//	sub x1,x1,1	   // decrement X counter
+	//	cbnz x1,loop0	   // If not end row jump
+	//	sub x2,x2,1	   // Decrement Y counter
+	//	cbnz x2,loop1	   // if not last row, jump
+	
+	
+	
 
 
 
@@ -50,25 +57,44 @@ main:
 	//x3 -> Padding
 	//x4 -> Color
 forever:
-	mov x0,200
-	mov x1,200
-	mov x2,300
-	mov x3,1
-	mov x4,0
-	bl vertical_isosceles_triangle
-	
-	mov x0,1000
-	bl delay
-	
-	mov x0,200
+	/*
+	mov x0,340
+	bl random
+	//mov x0,200
+	mov x22,x0
 	mov x1,200
 	mov x2,300
 	mov x3,1
 	mov x4,200
 	bl vertical_isosceles_triangle
 	
+	
 	mov x0,1000
-	bl delay
+	bl delay_millis
+	
+	mov x0,x22
+	mov x1,200
+	mov x2,300
+	mov x3,1
+	mov x4,0
+	bl vertical_isosceles_triangle
+	*/
+	
+	//mov x26,7	//Fix void x
+	//mov x27,9	//Fix void y
+	mov x0,480
+	bl random
+	mov x1,x0
+	//sdiv x1,x1,x26 
+	mov x0,640
+	bl random
+	//sdiv x0,x0,x27
+	bl xy_pixel
+	mov x10,0xFFFF
+	movk x10,0xFF, lsl 16
+	stur w10,[x0]
+	mov x0,5
+	bl delay_millis
 	
 	b forever
 	
@@ -94,16 +120,16 @@ random: //Generates pseudorandom number between 0 and x1 and stores it in x0
 	mul x9,x9,x10		//x9  -> Xn * a 
 	add x9,x9,x12		//x9  -> (Xn * a) +c
 	sdiv x13,x9,x11		//x13 -> ((Xn * a) + c) / m
-	msub x9,x9,x13,x11	//x13 -> Xn+1
+	msub x9,x13,x11,x9	//x13 -> Xn+1
 	mov x21,x9		//Save Xn+1
-	sdiv x0,x9,x1		
-	msub x0,x9,x0,x1	//Return number in range
-	
+	sdiv x14,x9,x0		
+	msub x0,x14,x0,x9	//Return number in range
+				//num - (cociente*denominador) -> coc,denom,num
 	br lr
 
 
 	
-delay:
+delay_millis:
 	//x0 ->	millis to delay
 	delay_loop0:
 		sub x0,x0,1
