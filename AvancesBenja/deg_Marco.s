@@ -9,7 +9,6 @@ main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
 //---------------- CODE HERE ------------------------------------
-	
 movz x10, 0x00, lsl 16
 movk x10, 0x0000, lsl 00
 
@@ -31,6 +30,7 @@ movk x10, 0x0000, lsl 00
 		add x10,x10,0x1000 // voy sumando bits del color q quiero al anterior color y me voy acercando
 		cmp x3,16 // si x3 es 16 significa que ya dibuje las 16 lineas y debo parar( la primera la dibujo cuando x3 es 0) 
 		b.ne newline
+
 	
 	//------- dibujo del marco
 	mov x0, 0
@@ -66,37 +66,41 @@ movk x10, 0x0000, lsl 00
 	bl rectangle
 	//------------------------parte de arriba(gris claro)
 	
-	//----------bordes oscuros 
+	//---------------bordes oscuros------------------ 
 	mov x0, 40
 	mov x1, 40
 	mov x2, 280
 	mov x3, 60
 
 	bl dark_gray
-	
 	bl rectangle
-	
+	//--------------rect vertical izq
 	mov x0, 540
 	mov x1, 40
 	mov x2, 280
 	mov x3, 60
 
 	bl dark_gray
-	
 	bl rectangle
-	
+	//-------------rect vertical der
 	mov x0, 100
 	mov x1, 40
 	mov x2, 20
 	mov x3, 500
 	
 	bl dark_gray
-	
 	bl rectangle
+	//-------------rect horizontal arriba
+	mov x0, 100
+	mov x1, 300
+	mov x2, 20
+	mov x3, 500
 	
-	
-	//--------- botones
-	
+	bl dark_gray
+	bl rectangle
+	//--------------rect horizontal abajo
+	//------------ botones ----------
+	//cruz negra
 	mov x0, 100
 	mov x1, 350
 	mov x2, 100
@@ -107,6 +111,7 @@ movk x10, 0x0000, lsl 00
 	
 	bl rectangle
 	
+	//--------------vertical
 	mov x0, 64
 	mov x1, 387
 	mov x2, 24
@@ -116,13 +121,94 @@ movk x10, 0x0000, lsl 00
 	movk x4, 0x0000, lsl 0
 	
 	bl rectangle
-	//-- cruz negra
+	//------------horizontal
+	//circulos rojos
+	mov x1, 530
+	mov x2, 370
+	mov x3, 25
+	
+	movz x4, 0xC3, lsl 16
+	movk x4, 0x1818, lsl 0
+	
+	bl circle
+	
+	mov x1, 470
+	mov x2, 420
+	mov x3, 25
+	
+	movz x4, 0xC3, lsl 16
+	movk x4, 0x1818, lsl 0
+	
+	bl circle
+	//--------animacion
+	movz x4, 0x00, lsl 16
+	//movk x4, 0x2000, lsl 0    // color inicial de la linea
+	movk x4, 0x2000, lsl 0
+	mov x7,60			 //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
+
+	mov x0, 350                      // parametros importantes para futura funcion x0, x1 coordenadas de la ficha
+	mov x1, 60
+	mov x2 , 30
+	movz x3, 0xFF, lsl 16
+	movk x3, 0xFFFF, lsl 0            //<- cuadradito blanco
+	mov x6 ,x1
 	
 	
-	
-	//-------------------
-	
+	mov x5, 0    
+	moveloop:
+		mov x0, 400
+		bl delay
+		mov x0, 350
+		mov x1, x6
+		mov x2 , 30
+		movz x3, 0xFF, lsl 16
+		movk x3, 0xFFFF, lsl 0	
+		bl square
+		cmp x5, 7
+		b.eq InfLoop
+		add x6, x6, 30
+		add x5,x5,1
+		mov x0, 1600
+		bl delay
+		bl sweepline
+		add x4,x4,0x1000
+		add x7,x7,30
+		b moveloop
+
+
 	b InfLoop
+
+//funciones
+
+square: //Assume: lado > 0
+	//Parametros
+	//X0 -> Coordenada X
+	//X1 -> Coordenada Y
+	//X2 -> Lado
+	//X3 -> Color
+	
+	mov x15, lr  		//Return auxiliara
+	bl xy_pixel  		//x0 -> direccion primer pixel
+	
+	mov x11,SCREEN_WIDTH
+	sub x11,x11,X2 		//Salto por linea
+	lsl x11,x11,#2
+	
+	mov x9,x2 		//altura
+	
+	loop0_square:
+			mov x10,x2 		//ancho
+	loop1_square:
+			stur w3,[x0]		//Set pixel
+			add x0,x0,#4		//Next pixel
+			sub x10,x10,#1		//Dec. width
+			cbnz x10, loop1_square	//Checks whether line has been drawn
+			add x0,x0,x11		//Skip void
+			sub x9,x9,#1		//Dec. height
+			cbnz x9,loop0_square	//Finish if done
+		
+	br x15	//return 
+
 
 
 rectangle:
@@ -172,7 +258,75 @@ dark_gray: // hace gris osucuro x4
 	
 	ret
 
+circle:
+	//x1 -> Coordenada x (Centro)
+	//x2 -> Coordenada y (Centro)
+	//x3 -> Radio
+	//x4 -> Color
+	
+	mov x0,x20
+	mov x13,SCREEN_WIDTH
+	mov x14,SCREEN_HEIGH	//Temp mult - Can't Mult by imm
+	mul x13,x13,x14
+	sub x13,x13,1
+	mov x14,4
+	mul x13,x13,x14
+	add x0,x0,x13 //Starting from last possition
+
+	// r² >= (xc-x)² + (yc-y)²
+
+	mul x3,x3,x3   // r²
+	
+	mov x9, SCREEN_HEIGH         // Y Size 
+	loop1_circle:
+		mov x10, SCREEN_WIDTH         // X Size
+	loop0_circle:
+		sub x11,x1,x10  	//x11 = xc-x
+		mul x11,x11,x11		//x11 = (xc-x)²
+		sub x12,x2,x9   	//x12  = yc-y
+		mul x12,x12,x12		//x12 = (yc-y)²
+		add x11,x11,x12 	//x11 = (xc-x)² + (yc-y)²
+		cmp x3, x11		//Paint only if r² >= (xc-x)² + (yc-y)²
+		b.LT else_circle
+		stur w4,[x0]	   // Set color of pixel N
+	else_circle:
+		sub x0,x0,4	   	// Previus pixel
+		sub x10,x10,1	   	// decrement X counter
+		cbnz x10,loop0_circle	   // If not end row jump
+		sub x9,x9,1	   	// Decrement Y counter
+		cbnz x9,loop1_circle	   // if not last row, jump
+	br lr
+
+//rectangulo pantallita
+sweepline:
+	mov x14,lr
+	mov x0, 100
+	mov x1, x7
+	mov x2, 30
+	mov x3, 440
+	bl rectangle
+	
+	br x14
+
+
+delay:
+	//x0 ->	millis to delay
+	delay_loop0:
+		sub x0,x0,1
+		movz x1,0xbffe, lsl 0
+		
+		
+	delay_loop1:
+		sub x1,x1,1
+		ldur x2,[x20]
+		ldur x2,[x20]
+		ldur x2,[x20]
+		cbnz x1, delay_loop1
+		cbnz x0, delay_loop0
+	br lr
+
+
 //----------------------------------------------------------
-	// Infinite Loop 
+// Infinite Loop 
 InfLoop: 
 	b InfLoop
