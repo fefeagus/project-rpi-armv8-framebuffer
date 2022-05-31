@@ -32,7 +32,8 @@ movk x10, 0x0000, lsl 00
 		b.ne newline
 
 	
-	//------- dibujo del marco
+//------------------------ dibujo del marco(claro) -------------------------------
+	
 	mov x0, 0
 	mov x1, 0
 	mov x2, 480
@@ -66,7 +67,9 @@ movk x10, 0x0000, lsl 00
 	bl rectangle
 	//------------------------parte de arriba(gris claro)
 	
-	//---------------bordes oscuros------------------ 
+	
+	
+	//--------------- bordes oscuros ------------------ 
 	mov x0, 40
 	mov x1, 40
 	mov x2, 280
@@ -99,7 +102,9 @@ movk x10, 0x0000, lsl 00
 	bl dark_gray
 	bl rectangle
 	//--------------rect horizontal abajo
-	//------------ botones ----------
+	
+	//----------------------- botones --------------------
+	
 	//cruz negra
 	mov x0, 100
 	mov x1, 350
@@ -137,48 +142,39 @@ movk x10, 0x0000, lsl 00
 	mov x3, 25
 	
 	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-	
+	movk x4 ,0x1818, lsl 0
+	mov x6 ,x1
 	bl circle
-	//--------animacion
+	
+	//---------------------------- animacion --------------------------------------
+	
 	movz x4, 0x00, lsl 16
 	//movk x4, 0x2000, lsl 0    // color inicial de la linea
 	movk x4, 0x2000, lsl 0
 	mov x7,60			 //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
 
-	mov x0, 350                      // parametros importantes para futura funcion x0, x1 coordenadas de la ficha
-	mov x1, 60
-	mov x2 , 30
-	movz x3, 0xFF, lsl 16
-	movk x3, 0xFFFF, lsl 0            //<- cuadradito blanco
-	mov x6 ,x1
-	
+	mov x19, 350           
+	mov x6, 60
+	bl primerficha           //<- cuadradito blanco
 	
 	mov x5, 0    
 	moveloop:
-		mov x0, 400
-		bl delay
-		mov x0, 350
-		mov x1, x6
-		mov x2 , 30
-		movz x3, 0xFF, lsl 16
-		movk x3, 0xFFFF, lsl 0	
-		bl square
+		bl primerficha
+		add x6, x6, 30
 		cmp x5, 7
 		b.eq InfLoop
-		add x6, x6, 30
 		add x5,x5,1
 		mov x0, 1600
 		bl delay
 		bl sweepline
-		add x4,x4,0x1000
-		add x7,x7,30
 		b moveloop
 
 
 	b InfLoop
+//----------------------------------------------------------------------------
 
-//funciones
+
+//-------------------------------- funciones -------------------------------------------
 
 square: //Assume: lado > 0
 	//Parametros
@@ -187,7 +183,7 @@ square: //Assume: lado > 0
 	//X2 -> Lado
 	//X3 -> Color
 	
-	mov x15, lr  		//Return auxiliara
+	mov x15, lr  		//Return auxiliar
 	bl xy_pixel  		//x0 -> direccion primer pixel
 	
 	mov x11,SCREEN_WIDTH
@@ -298,13 +294,16 @@ circle:
 	br lr
 
 //rectangulo pantallita
-sweepline:
+sweepline: // parametros: x7->cord y desde donde empiezo
 	mov x14,lr
 	mov x0, 100
 	mov x1, x7
 	mov x2, 30
 	mov x3, 440
 	bl rectangle
+	
+	add x4,x4,0x1000   //<- cambio el color de x4 para el prox llamado para imitar el degradado del fondo
+	add x7,x7,30      //<- bajo la linea 1 bloque para el prox llamado
 	
 	br x14
 
@@ -325,6 +324,19 @@ delay:
 		cbnz x0, delay_loop0
 	br lr
 
+primerficha://parametros: x6->coord y desde donde empiezo x19->coord x de donde sale la ficha
+	mov x13,x30
+	mov x0,600
+	bl delay
+	mov x0, x19
+	mov x1,x6
+	mov x2 , 30
+	movz x3, 0xFF, lsl 16
+	movk x3, 0xFFFF, lsl 0 
+	bl square
+	mov x6 ,x1
+
+	br x13
 
 //----------------------------------------------------------
 // Infinite Loop 
