@@ -3,6 +3,7 @@
 .equ SCREEN_HEIGH, 		480
 .equ BITS_PER_PIXEL,  	32
 
+.include "fun.s"
 
 .globl main
 main:
