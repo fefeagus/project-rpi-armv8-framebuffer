@@ -3,28 +3,43 @@
 .equ SCREEN_HEIGH, 		480
 .equ BITS_PER_PIXEL,  	32
 
-.include "fun.s"
+.include "app_fun.s"
 
 .globl main
 main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
 	//---------------- CODE HERE ------------------------------------
+	//Como convencion, X0 será la direccion de retorno de las funciones
 	
-movz x10, 0x00, lsl 16
-movk x10, 0x0000, lsl 00
+	movz x10, 0x00, lsl 16
+	movk x10, 0x0000, lsl 00
 
-@@ -31,6 +30,7 @@ movk x10, 0x0000, lsl 00
+	mov x3, 0
+
+	newline:
+		mov x1, 19200      //  cant pixeles de cada linea ( (640*480)/16 )
+		
+	loop0:
+		stur w10,[x0]	   // Set color of pixel N
+		add x0,x0,4	   // Next pixel
+		sub x1,x1,1  	   // decrement X counter
+		cbnz x1,loop0	   // If not end of line go to loop0
+					
+		// el loop 0 hace 1 linea o rectangulo de 40 de largo por 480 de ancho
+
+	setcolor:
+		add x3,x3,1
 		add x10,x10,0x1000 // voy sumando bits del color q quiero al anterior color y me voy acercando
 		cmp x3,16 // si x3 es 16 significa que ya dibuje las 16 lineas y debo parar( la primera la dibujo cuando x3 es 0) 
 		b.ne newline
-
-
+	
 	//------- dibujo del marco
 	mov x0, 0
 	mov x1, 0
 	mov x2, 480
 	mov x3, 40
+
 	bl gray
 	bl rectangle
 	//--------------------------- lado1
@@ -52,51 +67,38 @@ movk x10, 0x0000, lsl 00
 	bl gray
 	bl rectangle
 	//------------------------parte de arriba(gris claro)
-
+	
 	//----------bordes oscuros 
-	//---------------bordes oscuros------------------ 
 	mov x0, 40
 	mov x1, 40
 	mov x2, 280
 	mov x3, 60
 
 	bl dark_gray
-
+	
 	bl rectangle
-
-	//--------------rect vertical izq
+	
 	mov x0, 540
 	mov x1, 40
 	mov x2, 280
 	mov x3, 60
 
 	bl dark_gray
-
+	
 	bl rectangle
-
-	//-------------rect vertical der
+	
 	mov x0, 100
 	mov x1, 40
 	mov x2, 20
 	mov x3, 500
-
+	
 	bl dark_gray
-
+	
 	bl rectangle
-	//-------------rect horizontal arriba
-	mov x0, 100
-	mov x1, 300
-	mov x2, 20
-	mov x3, 500
-
-
+	
+	
 	//--------- botones
-
-	bl dark_gray
-	bl rectangle
-	//--------------rect horizontal abajo
-	//------------ botones ----------
-	//cruz negra
+	
 	mov x0, 100
 	mov x1, 350
 	mov x2, 100
@@ -104,10 +106,9 @@ movk x10, 0x0000, lsl 00
 	
 	movz x4, 0x00, lsl 16
 	movk x4, 0x0000, lsl 0
-
+	
 	bl rectangle
-
-	//--------------vertical
+	
 	mov x0, 64
 	mov x1, 387
 	mov x2, 24
@@ -115,64 +116,83 @@ movk x10, 0x0000, lsl 00
 	
 	movz x4, 0x00, lsl 16
 	movk x4, 0x0000, lsl 0
-
+	
 	bl rectangle
 	//-- cruz negra
-	//------------horizontal
-	//circulos rojos
-	mov x1, 530
-	mov x2, 370
-	mov x3, 25
-
-	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-
+	
+	//------------------------------------------------
+	
+	//-- botones rojos
+	
+	
+	mov x1,500
+	mov x2,400
+	mov x3,50
+	mov x4,0xFF0000
+	bl circle	
+	
+	mov x1,350
+	mov x2,400
+	mov x3,50
+	mov x4,0xFF0000
 	bl circle
-
+	
+	//---- kirby?
+	
+	mov x1,200
+	mov x2,200
+	mov x3,51
+	mov x4,0
+	bl circle
+	
+	mov x1,200
+	mov x2,200
+	mov x3,50
+	movz x4, 0xFD, lsl 16
+	movk x4, 0x00FF, lsl 0
+	bl circle
+	
+	mov x0, 200
+	mov x1, 200
+	mov x2, 20
+	mov x3, 14
+	mov x4,0
+	bl rectangle
+	
+	mov x0, 201
+	mov x1, 200
+	mov x2, 22
+	mov x3, 12
+	mov x4,0
+	bl rectangle
+	
+	mov x0, 202
+	mov x1, 200
+	mov x2, 23
+	mov x3, 10
+	mov x4,0
+	bl rectangle
+	
+	mov x0, 203
+	mov x1, 200
+	mov x2, 24
+	mov x3, 8
+	mov x4,0
+	bl rectangle
+	
+	//----- brazo morado
+	mov x0, 201
+	mov x1, 200
+	mov x2, 17
+	mov x3, 14
+	movz x4, 0xD8, lsl 16
+	movk x4, 0x00D8, lsl 0
+	bl rectangle
+	
+	
 	//-------------------
-	mov x1, 470
-	mov x2, 420
-	mov x3, 25
-
-	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-
-	bl circle
-	//--------animacion
-	movz x4, 0x00, lsl 16
-	//movk x4, 0x2000, lsl 0    // color inicial de la linea
-	movk x4, 0x2000, lsl 0
-	mov x7,60			 //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
-
-	mov x0, 350                      // parametros importantes para futura funcion x0, x1 coordenadas de la ficha
-	mov x1, 60
-	mov x2 , 30
-	movz x3, 0xFF, lsl 16
-	movk x3, 0xFFFF, lsl 0            //<- cuadradito blanco
-	mov x6 ,x1
-
-
-	mov x5, 0    
-	moveloop:
-		mov x0, 400
-		bl delay
-		mov x0, 350
-		mov x1, x6
-		mov x2 , 30
-		movz x3, 0xFF, lsl 16
-		movk x3, 0xFFFF, lsl 0	
-		bl square
-		cmp x5, 7
-		b.eq InfLoop
-		add x6, x6, 30
-		add x5,x5,1
-		mov x0, 1600
-		bl delay
-		bl sweepline
-		add x4,x4,0x1000
-		add x7,x7,30
-		b moveloop
-
+	
+	b InfLoop
 
 	//---------------------------------------------------------------
 	// Infinite Loop 
