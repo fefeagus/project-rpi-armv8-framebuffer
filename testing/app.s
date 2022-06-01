@@ -143,35 +143,28 @@ name:
 	br somewhere
 
 */
-//Save registers that are preserved across a call (x19-x27)
 
-
+//Save registers that are preserved across a call (x19-x27) and lr
 save_preserved_registers:
-	mov x9,0x0	//Can't be imm
-	stur x19,[x9]
-	stur x20,[x9,8]
-	stur x21,[x9,16]
-	stur x22,[x9,24]
-	stur x23,[x9,32]
-	stur x24,[x9,40]
-	stur x25,[x9,48]
-	stur x26,[x9,56]
-	stur x27,[x9,64]
+	sub  sp, sp, #0x50
+	stp  x26, x27, [sp]
+	stp  x24, x25, [sp, #0x10]
+	stp  x22, x23, [sp, #0x20]
+	stp  x20, x21, [sp, #0x30]
+	stp  x19, x26, [sp, #0x40]  //Might be changed to hold lr
 	br lr
 
 //Restore registers that are preserved across a call (x19-x27)
 restore_preserved_registers:
-	mov x9,0x0	//Can't be imm
-	ldur x19,[x9]
-	ldur x20,[x9,8]
-	ldur x21,[x9,16]
-	ldur x22,[x9,24]
-	ldur x23,[x9,32]
-	ldur x24,[x9,40]
-	ldur x25,[x9,48]
-	ldur x26,[x9,56]
-	ldur x27,[x9,64]
-	br lr
+	mov x0,lr
+	ldp  x19, x26, [sp, #0x40]  //Might be changed to hold lr
+	ldp  x20, x21, [sp, #0x30]
+	ldp  x22, x23, [sp, #0x20]
+	ldp  x24, x25, [sp, #0x10]
+	ldp  x26, x27, [sp]
+	add sp,sp,#0x50
+	br x0
+	
 
 random: //Generates pseudorandom number between 0 and x1 and stores it in x0
 	mov x9,x21		//x9  -> Xn
