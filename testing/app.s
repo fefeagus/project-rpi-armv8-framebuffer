@@ -8,16 +8,34 @@
 main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
- 	mov x21, 12345	// Save current pseudorandom
+ 	mov x21, 12345	// Save current pseudorandom (SEED)
  	movz x21,0x3D43,lsl 0
  	movk x21,0xF92B,lsl 16
- 
-
 	
-	//Como convencion, X0 será la direccion de retorno de las funciones
 	
 	movz x10, 0xC7, lsl 16
 	movk x10, 0x1585, lsl 00
+	
+	//DELETE	(For Demo)
+	mov x19,19
+	mov x22,22
+	mov x23,23
+	mov x24,24
+	mov x25,25
+	mov x26,26
+	mov x27,27
+	bl save_preserved_registers
+	mov x19,1
+	mov x20,2
+	mov x21,3
+	mov x22,4
+	mov x23,5
+	mov x24,6
+	mov x25,7
+	mov x26,8
+	mov x27,9
+	bl restore_preserved_registers
+	//DELETE
 
 	
 	//	mov x2, SCREEN_HEIGH         // Y Size 
@@ -56,6 +74,9 @@ main:
 	//x2 -> Longitud base
 	//x3 -> Padding
 	//x4 -> Color
+	
+
+	
 forever:
 	/*
 	mov x0,340
@@ -110,6 +131,40 @@ forever:
 //MODULUS_m, 0x100000000		//Linear congruential generator
 //SEED, 1				//Linear congruential generator
 
+
+
+
+//Importante - Toda función que modifique registros "preserved across a call" debería tener la forma:
+/*
+name:
+	bl save_preserved_registers
+	//DO STUFF
+	bl restore_preserved_registers
+	br somewhere
+
+*/
+
+//Save registers that are preserved across a call (x19-x27) and lr
+save_preserved_registers:
+	sub  sp, sp, #0x50
+	stp  x26, x27, [sp]
+	stp  x24, x25, [sp, #0x10]
+	stp  x22, x23, [sp, #0x20]
+	stp  x20, x21, [sp, #0x30]
+	stp  x19, x26, [sp, #0x40]  //Might be changed to hold lr
+	br lr
+
+//Restore registers that are preserved across a call (x19-x27)
+restore_preserved_registers:
+	mov x0,lr
+	ldp  x19, x26, [sp, #0x40]  //Might be changed to hold lr
+	ldp  x20, x21, [sp, #0x30]
+	ldp  x22, x23, [sp, #0x20]
+	ldp  x24, x25, [sp, #0x10]
+	ldp  x26, x27, [sp]
+	add sp,sp,#0x50
+	br x0
+	
 
 random: //Generates pseudorandom number between 0 and x1 and stores it in x0
 	mov x9,x21		//x9  -> Xn
