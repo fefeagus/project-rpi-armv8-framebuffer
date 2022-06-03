@@ -37,11 +37,13 @@ main:
 	
 	bl marco
 	bl Botones
-	bl Animatic
+	mov x19, 150
+	bl Animate
+
 	//-------------------
 	
-	bl InfLoop
-
+	
 	//---------------------------------------------------------------
 	// Infinite Loop 
-
+	InfLoop:
+		bl InfLoop
