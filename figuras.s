@@ -115,7 +115,7 @@ marco:	//------- dibujo del marco
 	mov x0, 0
 	mov x1, 0
 	mov x2, 480
-	mov x3, 40
+	mov x3, 50
 
 	bl gray
 	bl rectangle
@@ -128,10 +128,10 @@ marco:	//------- dibujo del marco
 	bl gray	
 	bl rectangle
 	//--------------------------rectangulo grande de abajo
-	mov x0, 600
+	mov x0, 590
 	mov x1, 0
 	mov x2, 480
-	mov x3, 40
+	mov x3, 50
 	
 	bl gray
 	bl rectangle
@@ -146,7 +146,7 @@ marco:	//------- dibujo del marco
 	//------------------------parte de arriba(gris claro)
 	
 	//---------------bordes oscuros------------------ 
-	mov x0, 40
+	mov x0, 50
 	mov x1, 40
 	mov x2, 280
 	mov x3, 60
@@ -154,7 +154,7 @@ marco:	//------- dibujo del marco
 	bl dark_gray
 	bl rectangle
 	//--------------rect vertical izq
-	mov x0, 540
+	mov x0, 530
 	mov x1, 40
 	mov x2, 280
 	mov x3, 60
@@ -165,7 +165,7 @@ marco:	//------- dibujo del marco
 	mov x0, 100
 	mov x1, 40
 	mov x2, 20
-	mov x3, 500
+	mov x3, 450
 	
 	bl dark_gray
 	bl rectangle
@@ -173,7 +173,7 @@ marco:	//------- dibujo del marco
 	mov x0, 100
 	mov x1, 300
 	mov x2, 20
-	mov x3, 500
+	mov x3, 450
 	
 	bl dark_gray
 	bl rectangle
@@ -230,10 +230,10 @@ Botones:	//------------ botones ----------
 //rectangulo que barre el rastro que deja la ficha
 sweepline:
 	mov x14,lr
-	mov x0, 100
+	mov x0, 110
 	mov x1, x7
 	mov x2, 30
-	mov x3, 440
+	mov x3, 420
 	bl rectangle
 	
 	add x4,x4,0x1000   //<- cambio el color de x4 para el prox llamado para imitar el degradado del fondo
@@ -242,9 +242,9 @@ sweepline:
 	br x14
 
 
-primerficha: //parametros: x6->coord y desde donde empiezo x19->coord x de donde sale la ficha
-	
+primerficha: //parametros: x19->coord x de donde sale la ficha
 	mov x13,x30
+
 	mov x0,600
 	bl delay
 	mov x0, x19
@@ -263,14 +263,11 @@ Animate: //parametros-> x19 de que lugar sale la ficha
 
 	STUR x30, [SP, 0]
 	
-	
 	movz x4, 0x00, lsl 16
 	//movk x4, 0x2000, lsl 0    // color inicial de la linea
 	movk x4, 0x2000, lsl 0
 	mov x7,60			 //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
-
-	
-	mov x6, 60
+	mov x6,60
 
 	bl primerficha           //<- cuadradito blanco
 	
@@ -285,12 +282,11 @@ Animate: //parametros-> x19 de que lugar sale la ficha
 		bl delay
 		bl sweepline
 		b moveloop
-
+	
 	LDR x30, [SP, 0]
 	//recupero el registro x30 y retorno
-	
 	return: 
-		ret
+		br x30
 
 
 
