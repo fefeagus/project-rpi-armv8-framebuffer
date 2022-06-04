@@ -22,6 +22,7 @@ main:
 		mov x1, 19200      //  cant pixeles de cada linea ( (640*480)/16 )
 		
 	loop0:
+	
 		stur w10,[x0]	   // Set color of pixel N
 		add x0,x0,4	   // Next pixel
 		sub x1,x1,1  	   // decrement X counter

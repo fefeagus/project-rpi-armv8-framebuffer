@@ -253,14 +253,32 @@ primerficha: //parametros: x19->coord x de donde sale la ficha
 	STUR x30, [SP, 0]
 
 	mov x0,600
-	bl delay
 	mov x0, x19
 	mov x1,x6
 	mov x2 , 30
-	movz x3, 0xFF, lsl 16
-	movk x3, 0xFFFF, lsl 0 
+	movz x3, 0x00, lsl 16
+	movk x3, 0x0000, lsl 0 
 	bl square
-	mov x6 ,x1
+
+	mov x0,600
+	mov x0, x19
+	add x0,x0,4
+	mov x1,x6
+	add x1,x1,4
+	mov x2 , 22
+	movz x3, 0xAE, lsl 16
+	movk x3, 0xAEAE, lsl 0
+	bl square
+
+	mov x0,600
+	mov x0, x19
+	add x0,x0,10
+	mov x1,x6
+	add x1,x1,10
+	mov x2 , 10
+	movz x3, 0xFF, lsl 16
+	movk x3, 0xFFFF, lsl 0
+	bl square
 
 	LDR x30, [SP, 0]
 	add sp,sp,8
@@ -275,9 +293,9 @@ Animate: //parametros-> x19 de que lugar sale la ficha
 	movz x4, 0x00, lsl 16
 	//movk x4, 0x2000, lsl 0    // color inicial de la linea
 	movk x4, 0x2000, lsl 0
-	mov x7,60			 //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
+	mov x7,60		     //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
 	mov x6,60
-
+	
 	bl primerficha           //<- cuadradito blanco
 	
 	mov x5, 0    
