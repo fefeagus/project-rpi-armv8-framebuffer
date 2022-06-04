@@ -111,7 +111,9 @@ rectangle:
 	// LDR x30, [SP, 0]
 	// ret
 marco:	//------- dibujo del marco
+	sub sp, sp, 8
 	STUR x30, [SP, 0]
+
 	mov x0, 0
 	mov x1, 0
 	mov x2, 480
@@ -178,11 +180,15 @@ marco:	//------- dibujo del marco
 	bl dark_gray
 	bl rectangle
 	//--------------rect horizontal abajo
+
 	LDR x30, [SP, 0]
+	add sp, sp, 8
+
 	ret //recupero el registro x30 y retorno
 	
 Botones:	//------------ botones ----------
 	//cruz negra
+	sub sp,sp,8
 	STUR x30, [SP, 0]
 	mov x0, 100
 	mov x1, 350
@@ -243,7 +249,8 @@ sweepline:
 
 
 primerficha: //parametros: x19->coord x de donde sale la ficha
-	mov x13,x30
+	sub sp,sp,8
+	STUR x30, [SP, 0]
 
 	mov x0,600
 	bl delay
@@ -255,14 +262,16 @@ primerficha: //parametros: x19->coord x de donde sale la ficha
 	bl square
 	mov x6 ,x1
 
-	br x13	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret	
 
 
  //---------------------------- animacion --------------------------------------	
 Animate: //parametros-> x19 de que lugar sale la ficha  
+	sub sp, sp,8
+	STUR x30, [SP,0]
 
-	STUR x30, [SP, 0]
-	
 	movz x4, 0x00, lsl 16
 	//movk x4, 0x2000, lsl 0    // color inicial de la linea
 	movk x4, 0x2000, lsl 0
@@ -283,10 +292,13 @@ Animate: //parametros-> x19 de que lugar sale la ficha
 		bl sweepline
 		b moveloop
 	
-	LDR x30, [SP, 0]
+
+	
 	//recupero el registro x30 y retorno
 	return: 
-		br x30
+		LDR x30, [SP, 0]
+		add sp, sp, 8
+		ret
 
 
 

@@ -35,17 +35,13 @@ main:
 		cmp x3,16 // si x3 es 16 significa que ya dibuje las 16 lineas y debo parar( la primera la dibujo cuando x3 es 0) 
 		b.ne newline
 	
-	
 	bl marco
 	bl Botones
-	bl gray
-
+	
 	mov x19, 110
 	bl Animate
-	mov x6, 60
-	mov x19,140
-	bl primerficha
-
+	mov x19, 140
+	bl Animate
 	//-------------------
 	
 	

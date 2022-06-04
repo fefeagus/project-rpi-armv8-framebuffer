@@ -5,8 +5,6 @@
 
 
 //funciones
-
-
 xy_pixel:    
 	//x0->coordx
 	//x1->coory
@@ -45,7 +43,25 @@ delay:
 		cbnz x0, delay_loop0
 	br lr
 	
+save_preserved_registers:
+	sub  sp, sp, #0x50
+	stp  x26, x27, [sp]
+	stp  x24, x25, [sp, #0x10]
+	stp  x22, x23, [sp, #0x20]
+	stp  x20, x21, [sp, #0x30]
+	stp  x19, x26, [sp, #0x40]  //Might be changed to hold lr
+	br lr
 
+//Restore registers that are preserved across a call (x19-x27)
+restore_preserved_registers:
+	mov x0,lr
+	ldp  x19, x26, [sp, #0x40]  //Might be changed to hold lr
+	ldp  x20, x21, [sp, #0x30]
+	ldp  x22, x23, [sp, #0x20]
+	ldp  x24, x25, [sp, #0x10]
+	ldp  x26, x27, [sp]
+	add sp,sp,#0x50
+	br x0
 	
 	
 	
