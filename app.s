@@ -41,8 +41,14 @@ main:
 	
 	mov x5, 110
 	bl Animate
-	mov x5, 140
-	bl Animate
+	//mov x5, 140
+	//bl Animate
+
+	//mov x6, 60
+	//mov x5,140
+	//bl ficha15
+
+
 	//-------------------
 	
 	

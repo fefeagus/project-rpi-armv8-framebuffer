@@ -1,5 +1,11 @@
-agregar mas fichas
-agregar "collider" a las fichas (que se puedan apilar)
-hacer que se generen y caigan fichas de forma aleatoria
-quitar una fila cuando se completa
-ver si se puede evitar usar x19 como parametro ✓  y ¿ no usar los temporales para guardar el registro x30(sp) ? 
+- agregar mas fichas (en proceso, las fichas estan, pero con las animaciones se bugean todas)
+
+- ver como hacer para no tener que hacer una animacion para cada ficha
+
+- agregar "collider" a las fichas (que se puedan apilar)
+
+- hacer que se generen y caigan fichas de forma aleatoria
+
+- quitar una fila cuando se completa
+
+- ver si se puede evitar usar x19 como parametro ✓  y ¿ no usar los temporales para guardar el registro x30(sp) ? 

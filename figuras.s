@@ -249,9 +249,24 @@ sweepline:
 	LDR lr, [sp, 0]
 	add sp,sp,8
 	ret
+sweepsquare: //paramteros x6->coord y,x5-->coord x (color sensible al cambio de x4)
+	sub sp,sp,8
+	STUR lr, [sp, 0]
+
+	mov x0,600
+	mov x0, x5
+	mov x1, x6
+	mov x2 , 30             //<- cuardrado que se adapta al fondo
+	mov x3, x4
+	bl square
+	
+	LDR lr, [sp, 0]
+	add sp,sp,8
+
+	ret
 
 
-ficha1: //parametros: x19->coord x de donde sale la ficha
+ficha1: //parametros: x5->coord x de donde sale la ficha
 	sub sp,sp,8
 	STUR x30, [SP, 0]
 
@@ -282,15 +297,14 @@ ficha1: //parametros: x19->coord x de donde sale la ficha
 	movz x3, 0xFF, lsl 16
 	movk x3, 0xFFFF, lsl 0
 	bl square
-
-	add x6, x6, 30  //me muevo una linea hacia abajo en prox llamado
+	
 
 	LDR x30, [SP, 0]
 	add sp,sp,8
 	ret	
 
 
-ficha2: //parametros: x19->coord x de donde sale la ficha
+ficha2: //parametros: x5->coord x de donde sale la ficha
 	sub sp,sp,8
 	STUR x30, [SP, 0]
 
@@ -312,7 +326,6 @@ ficha2: //parametros: x19->coord x de donde sale la ficha
 	movk x3, 0x0000, lsl 0
 	bl square
 
-	add x6,x6,30 //  me muevo una linea hacia abajo en prox llamado
 
 	LDR x30, [SP, 0]
 	add sp,sp,8
@@ -502,37 +515,49 @@ ficha13:// ficha con forma de l acostada izquierda
 	ret
 	
 ficha14:// ficha con forma de t para arriba
-	sub sp,sp,8
+	sub sp,sp,16
 	STUR x30, [SP, 0]
-
-	bl ficha1
-	bl ficha1
-	sub x6, x6, 30
-	sub x5, x5, 30
-	bl ficha1
-	sub x6, x6, 30
-	add x5, x5, 60
-	bl ficha1
+	STUR x5,[SP,8]
 	
+	bl sweepsquare
+
+	add x6,x6,30
+	bl ficha1
+	add x5,x5,30
+	bl ficha1
+	sub x6,x6,30
+	bl ficha1
+	add x5,x5,30
+
+	bl sweepsquare
+	
+	add x6,x6,30
+	bl ficha1
+
 	LDR x30, [SP, 0]
-	add sp,sp,8
+	LDR x5, [SP,8]
+	add sp,sp,16
 	ret
 
 ficha15:// ficha con forma de t
-	sub sp,sp,8
+	sub sp,sp,16
 	STUR x30, [SP, 0]
+	STUR x5,[SP,8]
 
-	bl ficha1
-	sub x6, x6, 30
-	add x5, x5, 60
-	bl ficha1
-	sub x6, x6, 30
-	sub x5, x5, 30
-	bl ficha1
-	bl ficha1
-	
+	bl ficha2
+	add x5,x5,30
+	bl ficha2
+	add x5,x5,30
+	bl ficha2
+	sub x5,x5,30
+	add x6,x6,30
+	bl ficha2
+
+	//add x6,x6,30 //  me muevo una linea hacia abajo en prox llamado
+
 	LDR x30, [SP, 0]
-	add sp,sp,8
+	LDR x5, [SP,8]
+	add sp,sp,16
 	ret
 
 ficha16:// ficha con forma de t lado izquierdo
@@ -615,13 +640,17 @@ Animate: //parametros-> x19 de que lugar sale la ficha
 
 	mov x14, 0    // iterador
 	moveloop:
-		bl ficha1
-		cmp x14, 7
+		bl ficha14
+
+		cmp x14, 6
 		b.eq return
 		add x14,x14,1
+
 		mov x0, 1600
 		bl delay
+
 		bl sweepline
+
 		b moveloop
 	
 
