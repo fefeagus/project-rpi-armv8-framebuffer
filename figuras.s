@@ -235,7 +235,8 @@ Botones:	//------------ botones ----------
 	
 //rectangulo que barre el rastro que deja la ficha
 sweepline:
-	mov x14,lr
+	sub sp,sp,8
+	STUR lr, [sp, 0]
 	mov x0, 110
 	mov x1, x7
 	mov x2, 30
@@ -245,15 +246,17 @@ sweepline:
 	add x4,x4,0x1000   //<- cambio el color de x4 para el prox llamado para imitar el degradado del fondo
 	add x7,x7,30      //<- bajo la linea 1 bloque para el prox llamado
 	
-	br x14
+	LDR lr, [sp, 0]
+	add sp,sp,8
+	ret
 
 
-primerficha: //parametros: x19->coord x de donde sale la ficha
+ficha1: //parametros: x19->coord x de donde sale la ficha
 	sub sp,sp,8
 	STUR x30, [SP, 0]
 
 	mov x0,600
-	mov x0, x19
+	mov x0, x5
 	mov x1,x6
 	mov x2 , 30
 	movz x3, 0x00, lsl 16
@@ -261,7 +264,7 @@ primerficha: //parametros: x19->coord x de donde sale la ficha
 	bl square
 
 	mov x0,600
-	mov x0, x19
+	mov x0, x5
 	add x0,x0,4
 	mov x1,x6
 	add x1,x1,4
@@ -271,7 +274,7 @@ primerficha: //parametros: x19->coord x de donde sale la ficha
 	bl square
 
 	mov x0,600
-	mov x0, x19
+	mov x0, x5
 	add x0,x0,10
 	mov x1,x6
 	add x1,x1,10
@@ -280,9 +283,43 @@ primerficha: //parametros: x19->coord x de donde sale la ficha
 	movk x3, 0xFFFF, lsl 0
 	bl square
 
+	add x6, x6, 30  //me muevo una linea hacia abajo en prox llamado
+
 	LDR x30, [SP, 0]
 	add sp,sp,8
 	ret	
+
+
+ficha2: //parametros: x19->coord x de donde sale la ficha
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	mov x0,600
+	mov x0, x5
+	mov x1,x6
+	mov x2 , 30
+	movz x3, 0xFF, lsl 16
+	movk x3, 0xFFFF, lsl 0 
+	bl square
+
+	mov x0,600
+	mov x0, x5
+	add x0,x0,4
+	mov x1,x6
+	add x1,x1,4
+	mov x2 , 22
+	movz x3, 0x00, lsl 16
+	movk x3, 0x0000, lsl 0
+	bl square
+
+	add x6,x6,30 //  me muevo una linea hacia abajo en prox llamado
+
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret	
+
+
+
 
 
  //---------------------------- animacion --------------------------------------	
@@ -290,21 +327,19 @@ Animate: //parametros-> x19 de que lugar sale la ficha
 	sub sp, sp,8
 	STUR x30, [SP,0]
 
-	movz x4, 0x00, lsl 16
-	//movk x4, 0x2000, lsl 0    // color inicial de la linea
+	movz x4, 0x00, lsl 16  // color inicial de la linea
 	movk x4, 0x2000, lsl 0
+
 	mov x7,60		     //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
 	mov x6,60
-	
-	bl primerficha           //<- cuadradito blanco
-	
-	mov x5, 0    
+
+
+	mov x14, 0    // iterador
 	moveloop:
-		bl primerficha
-		add x6, x6, 30
-		cmp x5, 7
+		bl ficha1
+		cmp x14, 7
 		b.eq return
-		add x5,x5,1
+		add x14,x14,1
 		mov x0, 1600
 		bl delay
 		bl sweepline

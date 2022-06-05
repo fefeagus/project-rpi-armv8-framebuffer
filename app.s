@@ -39,9 +39,9 @@ main:
 	bl marco
 	bl Botones
 	
-	mov x19, 110
+	mov x5, 110
 	bl Animate
-	mov x19, 140
+	mov x5, 140
 	bl Animate
 	//-------------------
 	
