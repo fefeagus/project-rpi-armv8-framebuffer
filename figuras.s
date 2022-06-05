@@ -318,7 +318,286 @@ ficha2: //parametros: x19->coord x de donde sale la ficha
 	add sp,sp,8
 	ret	
 
+ficha3:// cuadrado de cuatro bloques 
+	sub sp,sp,8
+	STUR x30, [SP, 0]
 
+	bl ficha1
+	sub x5, x5, 30
+	sub x6, x6, 30
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret	
+
+ficha4:// ficha con forma de s
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	sub x5, x5, 30
+	sub x6, x6, 30
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	sub x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+	
+ficha5:// ficha con forma de s de pie
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	add x5, x5, 30
+	sub x6, x6, 30
+	bl ficha1
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+
+ficha6:// ficha con forma de s invertida
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+
+	
+ficha7:// ficha con forma de s invertida de pie
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	sub x5, x5, 30
+	bl ficha1
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha8:// ficha con forma de l invertida acostada a la derecha
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha9:// ficha con forma de l invertida acostada a la izquierda
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha10:// ficha con forma de l invertida
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	sub x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha11:// ficha con forma de l
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha12:// ficha con forma de l acostada derecha
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 60
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha13:// ficha con forma de l acostada izquierda
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 60
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+	
+ficha14:// ficha con forma de t para arriba
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	sub x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 60
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha15:// ficha con forma de t
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 60
+	bl ficha1
+	sub x6, x6, 30
+	sub x5, x5, 30
+	bl ficha1
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha16:// ficha con forma de t lado izquierdo
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	sub x5, x5, 30
+	bl ficha1
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha17:// ficha con forma de t lado derecho
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha18:// ficha recta
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	bl ficha1
+	bl ficha1
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
+
+ficha19:// ficha recta acostada
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	sub x6, x6, 30
+	add x5, x5, 30
+	bl ficha1
+	
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret
 
 
 
