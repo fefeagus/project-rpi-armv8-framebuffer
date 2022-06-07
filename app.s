@@ -3,8 +3,7 @@
 .equ SCREEN_HEIGH, 		480
 .equ BITS_PER_PIXEL,  	32
 
-.include "figuras.s"
-
+.include "fichas.s"
 
 .globl main
 main:
@@ -38,16 +37,13 @@ main:
 	
 	bl marco
 	bl Botones
-	
+
 	mov x5, 110
-	bl Animate
-	//mov x5, 140
-	//bl Animate
-
-	//mov x6, 60
-	//mov x5,140
-	//bl ficha15
-
+	bl Anim14
+	mov x5, 140
+	bl Anim5
+	mov x5, 260
+	bl Anim15
 
 	//-------------------
 	
