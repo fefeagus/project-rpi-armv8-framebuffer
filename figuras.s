@@ -265,4 +265,18 @@ sweepsquare: //paramteros x6->coord y,x5-->coord x (color sensible al cambio de 
 
 	ret
 
-
+	sweepline120:
+	sub sp,sp,8
+	STUR lr, [sp, 0]
+	mov x0, x5  //<-- el rectangulo enmpieza donde empieza la ficha
+	mov x1, x7
+	mov x2, 30
+	mov x3, 120
+	bl rectangle
+	
+	add x4,x4,0x1000   //<- cambio el color de x4 para el prox llamado para imitar el degradado del fondo
+	add x7,x7,30      //<- bajo la linea 1 bloque para el prox llamado
+	
+	LDR lr, [sp, 0]
+	add sp,sp,8
+	ret
