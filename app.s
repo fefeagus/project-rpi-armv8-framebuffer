@@ -38,17 +38,32 @@ main:
 	bl marco
 	bl Botones
 	
-	mov x5, 410
+	mov x5, 380
 	bl Anim18
 	
 	mov x5, 110
 	bl Anim14
 	mov x5, 140
 	bl Anim5
-	mov x5, 260
+	mov x5, 320
 	bl Anim15
-	mov x5, 290
+	mov x5, 350
 	bl Anim9_10
+	mov x5, 290
+	bl Anim19_2
+	
+	mov x5, 200
+	bl Anim14
+
+	mov x5, 230
+	bl Anim5
+
+	mov x5,170
+	bl Anim3
+
+	mov x5,330
+	bl Anim3
+
 	//-------------------
 	
 	

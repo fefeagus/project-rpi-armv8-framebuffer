@@ -249,6 +249,7 @@ sweepline:
 	LDR lr, [sp, 0]
 	add sp,sp,8
 	ret
+	
 sweepsquare: //paramteros x6->coord y,x5-->coord x (color sensible al cambio de x4)
 	sub sp,sp,8
 	STUR lr, [sp, 0]
@@ -265,7 +266,7 @@ sweepsquare: //paramteros x6->coord y,x5-->coord x (color sensible al cambio de 
 
 	ret
 
-	sweepline120:
+sweepline120:
 	sub sp,sp,8
 	STUR lr, [sp, 0]
 	mov x0, x5  //<-- el rectangulo enmpieza donde empieza la ficha

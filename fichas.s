@@ -73,18 +73,17 @@ ficha3:// cuadrado de cuatro bloques
 	sub sp,sp,8
 	STUR x30, [SP, 0]
 
-	bl ficha1
-	sub x5, x5, 30
-	sub x6, x6, 30
-	bl ficha1
-	bl ficha1
-	sub x6, x6, 30
-	add x5, x5, 30
-	bl ficha1
-	
+	bl ficha20
+	add x5,x5,30
+	bl ficha20
+	add x6,x6,30
+	bl ficha20
+	sub x5,x5,30
+	bl ficha20
+
 	LDR x30, [SP, 0]
 	add sp,sp,8
-	ret	
+	ret
 
 ficha4:// ficha con forma de s
 	sub sp,sp,8
@@ -351,13 +350,13 @@ ficha18:// ficha recta
 	STUR x30, [SP, 0]
 	STUR x5,[SP,8]
 
-	bl ficha2
+	bl ficha20
 	add x6, x6, 30
-	bl ficha2
+	bl ficha20
 	add x6, x6, 30
-	bl ficha2
+	bl ficha20
 	add x6, x6, 30
-	bl ficha2
+	bl ficha20
 	sub x6,x6,60
 	
 	LDR x30, [SP, 0]
@@ -370,13 +369,13 @@ ficha19:// ficha recta acostada
 	STUR x30, [SP, 0]
 	STUR x5,[SP,8]
 	
-	bl ficha2
+	bl ficha20
 	add x5, x5, 30
-	bl ficha2
+	bl ficha20
 	add x5, x5, 30
-	bl ficha2
+	bl ficha20
 	add x5, x5, 30
-	bl ficha2
+	bl ficha20
 	add x6, x6, 30
 	
 	LDR x30, [SP, 0]
@@ -384,8 +383,47 @@ ficha19:// ficha recta acostada
 	add sp,sp,16
 	ret
 
+ficha20: //parametros: x5->coord x de donde sale la ficha
+	sub sp,sp,8
+	STUR x30, [SP, 0]
 
- //---------------------------- anim ficha 14--------------------------------------	
+	mov x0,600
+	mov x0, x5
+	mov x1,x6
+	mov x2 , 30
+	movz x3, 0xFF, lsl 16
+	movk x3, 0xFFFF, lsl 0 
+	bl square
+
+	mov x0,600
+	mov x0, x5
+	add x0,x0,4
+	mov x1,x6
+	add x1,x1,4
+	mov x2 , 22
+	movz x3, 0xAE, lsl 16
+	movk x3, 0xAEAE, lsl 0
+	bl square
+
+	mov x0,600
+	mov x0, x5
+	add x0,x0,10
+	mov x1,x6
+	add x1,x1,10
+	mov x2 , 10
+	movz x3, 0x00, lsl 16
+	movk x3, 0x0000, lsl 0
+	bl square
+	
+
+	LDR x30, [SP, 0]
+	add sp,sp,8
+	ret	
+
+
+
+
+ //---------------------------- animaciones: parámetros: x5, de donde sale la ficha en el eje de las x ------------------------------
 Anim14: //parametros-> x19 de que lugar sale la ficha  
 	sub sp, sp,8
 	STUR x30, [SP,0]
@@ -422,7 +460,7 @@ Anim14: //parametros-> x19 de que lugar sale la ficha
 
 
  //---------------------------- anim ficha15 --------------------------------------	
-Anim15: //parametros-> x19 de que lugar sale la ficha  
+Anim15: //parametros-> x5 de que lugar sale la ficha  
 	sub sp, sp,8
 	STUR x30, [SP,0]
 
@@ -431,7 +469,8 @@ Anim15: //parametros-> x19 de que lugar sale la ficha
 
 	mov x7,60		     //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
 	mov x6,60
-
+	
+	// 60 es en el eje y donde comienza sweepline y donde comienza la ficha
 
 	mov x14, 0    // iterador
 	loop_15:   //movimiento
@@ -512,8 +551,9 @@ Anim18: //parametros-> x19 de que lugar sale la ficha
 	mov x0, 1600
 	bl delay
 	bl sweepline120
-	
+	add x5,x5,60
 	loop_18:   //movimiento
+		
 		bl ficha18
 
 		cmp x14, 2
@@ -523,7 +563,7 @@ Anim18: //parametros-> x19 de que lugar sale la ficha
 		mov x0, 1600
 		bl delay
 
-		bl sweepline120
+		bl sweepline
 
 		b loop_18
 	
@@ -605,12 +645,79 @@ Anim9_10: //parametros-> x19 de que lugar sale la ficha
 	
 	//recupero el registro x30 y retorno
 	ret9_10: 
-		mov x0, 1600
+		mov x0, 200
 		bl delay
 		bl sweepline
 		add x5, x5, 60
 		sub x6, x6, 30
 		bl ficha10
+		LDR x30, [SP, 0]
+		add sp, sp, 8
+		ret
+
+Anim19_2:
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	movz x4, 0x00, lsl 16  // color inicial de la linea
+	movk x4, 0x2000, lsl 0
+
+	mov x7,60		     //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
+	mov x6,60
+
+
+	mov x14, 0    // iterador
+	
+	loop_19_2:   //movimiento
+		
+		bl ficha19
+
+		cmp x14, 5
+		b.eq ret19_2
+		add x14,x14,1
+
+		mov x0, 1600
+		bl delay
+
+		bl sweepline120
+
+		b loop_19_2
+	//recupero el registro x30 y retorno
+	ret19_2: 
+		LDR x30, [SP, 0]
+		add sp, sp, 8
+		ret
+
+
+Anim3:
+	sub sp,sp,8
+	STUR x30, [SP, 0]
+
+	movz x4, 0x00, lsl 16  // color inicial de la linea
+	movk x4, 0x2000, lsl 0
+
+	mov x7,60		     //<-- en x7 voy guardando los parametros que se van pasando en x0 del rectangulo
+	mov x6,60
+
+
+	mov x14, 0    // iterador
+	
+	loop_3:   //movimiento
+		
+		bl ficha3
+
+		cmp x14, 3
+		b.eq ret3
+		add x14,x14,1
+		mov x0, 1600
+		bl delay
+
+		bl sweepline
+
+		b loop_3
+	
+	//recupero el registro x30 y retorno
+	ret3: 
 		LDR x30, [SP, 0]
 		add sp, sp, 8
 		ret
