@@ -249,7 +249,37 @@ sweepline:
 	LDR lr, [sp, 0]
 	add sp,sp,8
 	ret
+
+
+				 //Imprime color acorde a la altura y
+sweep_square_automatic: //parameteros x6->coord y,x5-->coord x
+	sub sp,sp,8
+	STUR lr, [sp, 0]
+	bl save_preserved_registers //Para poder operar con los registros X19..X27
+	//CALCULATE COLOR
+
+	//PONER EN x3 color correspondiente
+	mov x19,x6			//x9 ->Coord Y
+	mov x21,30 			//Divisor
+	sdiv x19,x19,x21		//X11 -> x9/30
+	mov x21,0x1000		//x10 ->El incremento de color por linea
+	mul x19,x19,x21		//Calculate color
+	mov x3,x19			//Save color
 	
+
+	mov x0, x5			//Coord X
+	mov x1, x6			//Coord Y
+	mov x2, 30         //<- cuadrado que se adapta al fondo  (Lado cuadrado)
+
+	bl square
+
+	bl restore_preserved_registers //restaurar registros modificados
+	LDR lr, [sp, 0]
+	add sp,sp,8
+
+	ret
+
+
 sweepsquare: //paramteros x6->coord y,x5-->coord x (color sensible al cambio de x4)
 	sub sp,sp,8
 	STUR lr, [sp, 0]
