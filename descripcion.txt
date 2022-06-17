@@ -1,0 +1,7 @@
+Integrantes:
+	Esteban Diego Druetta;  
+	Federico Agustin Lucero; 
+	Ignacio Benjamin Ceballos;  44672010
+
+Descripción:
+	Partida de Tetris en una consola portátil.
