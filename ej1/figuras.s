@@ -6,7 +6,7 @@
 .include "app_fun.s"
 
 /*
-Contiene distintas figuras básicas, compuestas, animar botones y algunas para recomponer el fondo 
+Contiene distintas figuras básicas, compuestas y algunas para componer el fondo
 */
 //------------------------ figuras básicas -----------------------
 
@@ -237,138 +237,6 @@ Botones:	//------------ botones ----------
 	bl circle
 	LDR x30, [SP, 0]
 	ret //recupero el registro x30 y retorno
-
-//Animar botón A
-press_a:
-	sub sp,sp,8
-	STUR x30, [SP, 0]
-	bl save_preserved_registers
-	
-	mov x22,0	//Color shift
-	mov x23,200	//Shift range
-p_a_b:
-	mov x1, 530
-	mov x2, 370
-	mov x3, 25
-	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-	add x4,x4,x22
-	bl circle
-	mov x0,1
-	bl delay
-	add x22,x22,0x100
-	sub x23,x23,1
-	cbnz x23, p_a_b
-	
-	
-	mov x1, 530
-	mov x2, 370
-	mov x3, 25
-	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-	bl circle
-	
-	bl restore_preserved_registers
-	LDR x30, [SP, 0]
-	add sp,sp,8
-	ret
 	
 
-press_b:
-	sub sp,sp,8
-	STUR x30, [SP, 0]
-	bl save_preserved_registers
-	
-	mov x22,0	//Color shift
-	mov x23,200	//Shift range
-p_b_b:
-	mov x1, 470
-	mov x2, 420
-	mov x3, 25
-	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-	add x4,x4,x22
-	bl circle
-	mov x0,1
-	bl delay
-	add x22,x22,0x100
-	sub x23,x23,1
-	cbnz x23, p_b_b
-	
-	mov x1, 470
-	mov x2, 420
-	mov x3, 25
-	movz x4, 0xC3, lsl 16
-	movk x4, 0x1818, lsl 0
-	bl circle
-	
-	bl restore_preserved_registers
-	LDR x30, [SP, 0]
-	add sp,sp,8
-	ret
 
-	
-//rectangulo que barre el rastro que deja la ficha
-sweepline:
-	sub sp,sp,8
-	STUR lr, [sp, 0]
-	mov x0, x5  //<-- el rectangulo enmpieza donde empieza la ficha
-	mov x1, x7
-	mov x2, 30
-	mov x3, 90
-	bl rectangle
-	
-	add x4,x4,0x1000   //<- cambio el color de x4 para el prox llamado para imitar el degradado del fondo
-	add x7,x7,30      //<- bajo la linea 1 bloque para el prox llamado
-	
-	LDR lr, [sp, 0]
-	add sp,sp,8
-	ret
-
-
-			//Imprime un cuadrado de 30x30 (tamaño ficha) con color acorde al del fondo 
-			//en la altura y 
-sweep_square_automatic: //parameteros x6->coord y;x5-->coord x
-	sub sp,sp,8
-	STUR lr, [sp, 0]
-	bl save_preserved_registers //Para poder operar con los registros X19..X27
-	//CALCULATE COLOR
-
-	//PONER EN x3 color correspondiente
-	mov x19,x6			//x9 ->Coord Y
-	mov x21,30 			//Divisors
-	sdiv x19,x19,x21		//X11 -> x9/30
-	mov x21,0x1000		//x10 ->El incremento de color por linea
-	mul x19,x19,x21		//Calculate color
-	mov x3,x19			//Save color
-	
-
-	mov x0, x5			//Coord X
-	mov x1, x6			//Coord Y
-	mov x2, 30         //<- cuadrado que se adapta al fondo  (Lado cuadrado)
-
-	bl square
-
-	bl restore_preserved_registers //restaurar registros modificados
-	LDR lr, [sp, 0]
-	add sp,sp,8
-
-	ret
-
-	     
-	
-sweepline120:
-	sub sp,sp,8
-	STUR lr, [sp, 0]
-	mov x0, x5  //<-- el rectangulo enmpieza donde empieza la ficha
-	mov x1, x7
-	mov x2, 30
-	mov x3, 120
-	bl rectangle
-	
-	add x4,x4,0x1000   //<- cambio el color de x4 para el prox llamado para imitar el degradado del fondo
-	add x7,x7,30      //<- bajo la linea 1 bloque para el prox llamado
-	
-	LDR lr, [sp, 0]
-	add sp,sp,8
-	ret

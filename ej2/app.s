@@ -63,84 +63,100 @@ main:
 	//X2-> N° Ficha	(Codigo de ficha a animar -  Consultar fichas.s)
 	
 InfLoop:
-
+	
+	bl press_b
 	mov x5, 380
 	bl Anim18	//Animacion especial 1 
 	
+	bl press_a
 	mov x0,0
 	mov x1,6
 	mov x2,14
 	bl general_animation	//2 
 	
+	bl press_b
 	mov x0,1
 	mov x1,4
 	mov x2,7
 	bl general_animation	//3
 	
+	bl press_a
 	mov x0,7
 	mov x1,6
 	mov x2,15
 	bl general_animation	//4
 	
-	
+	bl press_b
 	mov x5, 350
 	bl Anim9_10	//Animacion especial 2
 	
+	bl press_b
 	mov x0,6
 	mov x1,5
 	mov x2,19
 	bl general_animation	//6
 	
+	bl press_b
 	mov x0,3
 	mov x1,6
 	mov x2,14
 	bl general_animation	//7
 	
+	bl press_a
 	mov x0,4
 	mov x1,4
 	mov x2,7
 	bl general_animation	//8
 	
+	bl press_b
 	mov x0,2
 	mov x1,3
 	mov x2,3
 	bl general_animation	//9
 	
+	bl press_b
 	mov x0,7
 	mov x1,3
 	mov x2,3
 	bl general_animation	//10
 	
+	bl press_a
 	mov x0,12
 	mov x1,5
 	mov x2,5
 	bl general_animation	//11
 	
+	bl press_b
 	mov x0,0
 	mov x1,3
 	mov x2,18
 	bl general_animation	//12
 	
+	bl press_a
 	mov x0,4
 	mov x1,3
 	mov x2,9
 	bl general_animation	//13
 	
+	bl press_b
 	mov x0,12
 	mov x1,3
 	mov x2,17
 	bl general_animation	//14
 	
+	bl press_a
 	mov x0,9
 	mov x1,3
 	mov x2,12
 	bl general_animation	//15
 	
+	bl press_b
 	mov x0,11
 	mov x1,2
 	mov x2,9
 	bl general_animation	//16
 	
+	bl press_a
 	mov x0,0
 	mov x1,2
 	mov x2,15
@@ -182,36 +198,43 @@ delete1:bl sweep_square_automatic //Borrar linea superior
 	bl delay
 	//La linea ya fue borrada - Seguimos añadiendo fichas nuevas
 	
+	bl press_a
 	mov x0,9
 	mov x1,2
 	mov x2,4
 	bl general_animation	//18
 	
+	bl press_a
 	mov x0,3
 	mov x1,3
 	mov x2,19
 	bl general_animation	//19
 	
+	bl press_b
 	mov x0,5
 	mov x1,2
 	mov x2,9
 	bl general_animation	//20
 	
+	bl press_a
 	mov x0,7
 	mov x1,1
 	mov x2,6
 	bl general_animation	//21
 	
+	bl press_a
 	mov x0,0
 	mov x1,0
 	mov x2,11
 	bl general_animation	//22
 	
+	bl press_b
 	mov x0,2
 	mov x1,1
 	mov x2,8
 	bl general_animation	//23
 	
+	bl press_a
 	mov x0,12
 	mov x1,0
 	mov x2,16
@@ -222,6 +245,8 @@ delete1:bl sweep_square_automatic //Borrar linea superior
 	//Agregaremos la ficha que exede la pantalla (Por lo que se pierde el juego)
 	//Se hará parpadear esta ficha para indicar que no entra en la pantalla
 	
+	
+	bl press_b
 	mov x27,3	//Parpadeará 3 veces
 	
 BLINK:	mov x5,230	//Mostrar ficha
